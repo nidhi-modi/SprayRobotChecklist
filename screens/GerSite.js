@@ -4,6 +4,7 @@ import { ScrollView } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
+import { SafeAreaView } from 'react-native-safe-area-context';
 
 var houseSelected;
 
@@ -446,6 +447,8 @@ export default class GerSite extends React.Component {
             <ScrollView style={styles.formContainer}
                 keyboardShouldPersistTaps='handled'>
 
+                <SafeAreaView>
+
                 <Text style={styles.siteNameText}>{this.state.siteName}</Text>
 
                 <View style={styles.marginDimension}></View>
@@ -770,7 +773,7 @@ export default class GerSite extends React.Component {
 
 
 
-
+                </SafeAreaView>
 
 
             </ScrollView>
@@ -868,8 +871,6 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         justifyContent: 'center',
         alignItems: 'center',
-        margin: 10,
-        marginTop: 10,
         textDecorationLine: 'underline'
     },
 
@@ -904,7 +905,8 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         marginTop: -10,
         marginLeft: -10,
-        marginRight: -10
+        marginRight: -10,
+        marginBottom: -10,
 
     },
 
