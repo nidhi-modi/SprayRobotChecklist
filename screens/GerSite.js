@@ -7,7 +7,7 @@ import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
 
 var houseSelected;
-
+var random = 0;
 var width = Dimensions.get('window').width / 1.1;
 
 class RadioButton extends Component {
@@ -73,6 +73,7 @@ export default class GerSite extends React.Component {
             optionComment7: '',
             optionComment8: '',
             optionComment9: '',
+            checkListNumber: '',
 
             radioItems1:
                 [
@@ -250,6 +251,35 @@ export default class GerSite extends React.Component {
 
     }
 
+    //Generate checkList number
+
+    generateChecklistNumber = () => {
+
+        if (this.state.checkListNumber !== null || this.state.checkListNumber !== '') {
+
+            random = Math.floor(1000 + Math.random() * 9000)
+            this.setItem("checkListNumber", random.toString())
+            this.setState({ checkListNumber: random.toString() });
+            console.log("Number generated" + this.state.checkListNumber);
+
+
+            setTimeout(() => {
+                this.senDataToGoogle();
+            }, 500);
+
+
+        }
+
+        else {
+
+            this.senDataToGoogle();
+
+        }
+
+    }
+
+    //
+
     //Ristrict back press
     handleBackButton = () => {
 
@@ -266,7 +296,7 @@ export default class GerSite extends React.Component {
     componentDidMount() {
 
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-        
+
         //getStorageData
         this.getAsyncData();
 
@@ -304,123 +334,123 @@ export default class GerSite extends React.Component {
         }
 
         /*try {
-
+    
             AsyncStorage.getItem('sprayRobotNumber').then((text2Value) => {
-
+    
                 this.setState({ sprayRobotNumber: JSON.parse(text2Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption1').then((text3Value) => {
-
+    
                 this.setState({ radioOption1: JSON.parse(text3Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption2').then((text4Value) => {
-
+    
                 this.setState({ radioOption2: JSON.parse(text4Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption3').then((text5Value) => {
-
+    
                 this.setState({ radioOption3: JSON.parse(text5Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption4').then((text6Value) => {
-
+    
                 this.setState({ radioOption4: JSON.parse(text6Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption5').then((text7Value) => {
-
+    
                 this.setState({ radioOption5: JSON.parse(text7Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption6').then((text8Value) => {
-
+    
                 this.setState({ radioOption6: JSON.parse(text8Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption7').then((text9Value) => {
-
+    
                 this.setState({ radioOption7: JSON.parse(text9Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption8').then((text10Value) => {
-
+    
                 this.setState({ radioOption8: JSON.parse(text10Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }
-
+    
         try {
-
+    
             AsyncStorage.getItem('radioOption9').then((text11Value) => {
-
+    
                 this.setState({ radioOption9: JSON.parse(text11Value) });
-
+    
             }).done();
         } catch (error) {
-
-
+    
+    
         }*/
 
         try {
@@ -536,6 +566,18 @@ export default class GerSite extends React.Component {
             AsyncStorage.getItem('optionComment9').then((text21Value) => {
 
                 this.setState({ optionComment9: JSON.parse(text21Value) });
+
+            }).done();
+        } catch (error) {
+
+
+        }
+
+        try {
+
+            AsyncStorage.getItem('checkListNumber').then((text22Value) => {
+
+                this.setState({ checkListNumber: JSON.parse(text22Value) });
 
             }).done();
         } catch (error) {
@@ -880,6 +922,7 @@ export default class GerSite extends React.Component {
         var option8 = this.state.radioOption8;
         var option9 = this.state.radioOption9;
         var yourName = this.state.submitterName;
+        var number = this.state.checkListNumber;
 
 
 
@@ -889,7 +932,7 @@ export default class GerSite extends React.Component {
 
                 const scriptUrl = 'https://script.google.com/macros/s/AKfycbwBPZserOXzIF7MMi3pdiL2pM9M2eF3_uw7da2tzJvSHLGUsas/exec';
                 const url = `${scriptUrl}?
-                callback=ctrlq&action=${'doPostData'}&site_name=${siteName}&robot_number=${sprayRobotNumber}&name=${yourName}&check_list1=${option1}&check_list1_comments=${this.state.optionComment1}&check_list2=${option2}&check_list2_comments=${this.state.optionComment2}&check_list3=${option3}&check_list3_comments=${this.state.optionComment3}&check_list4=${option4}&check_list4_comments=${this.state.optionComment4}&check_list5=${option5}&check_list5_comments=${this.state.optionComment5}&check_list6=${option6}&check_list6_comments=${this.state.optionComment6}&check_list7=${option7}&check_list7_comments=${this.state.optionComment7}&check_list8=${option8}&check_list8_comments=${this.state.optionComment8}&check_list9=${option9}&check_list9_comments=${this.state.optionComment9}`;
+                callback=ctrlq&action=${'doPostData'}&checklist_number=${number}&site_name=${siteName}&robot_number=${sprayRobotNumber}&name=${yourName}&check_list1=${option1}&check_list1_comments=${this.state.optionComment1}&check_list2=${option2}&check_list2_comments=${this.state.optionComment2}&check_list3=${option3}&check_list3_comments=${this.state.optionComment3}&check_list4=${option4}&check_list4_comments=${this.state.optionComment4}&check_list5=${option5}&check_list5_comments=${this.state.optionComment5}&check_list6=${option6}&check_list6_comments=${this.state.optionComment6}&check_list7=${option7}&check_list7_comments=${this.state.optionComment7}&check_list8=${option8}&check_list8_comments=${this.state.optionComment8}&check_list9=${option9}&check_list9_comments=${this.state.optionComment9}`;
 
                 console.log("URL : " + url);
                 fetch(url, { mode: 'no-cors' }).then(
@@ -908,6 +951,8 @@ export default class GerSite extends React.Component {
                 AsyncStorage.removeItem('optionComment9');
                 AsyncStorage.removeItem('submitterName');
                 AsyncStorage.removeItem('sprayRobotNumber');
+                AsyncStorage.removeItem('checkListNumber');
+
 
                 this.setState({ sprayRobotNumber: '' })
                 this.setState({ submitterName: '' })
@@ -920,10 +965,11 @@ export default class GerSite extends React.Component {
                 this.setState({ optionComment7: '' })
                 this.setState({ optionComment8: '' })
                 this.setState({ optionComment9: '' })
+                this.setState({ checkListNumber: '' })
 
 
-                this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true});
-                Toast.showWithGravity('Success!! \Form Submitted Successfully.', Toast.LONG, Toast.CENTER);
+                this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
+                Toast.showWithGravity('Success!! \nForm Submitted Successfully.', Toast.LONG, Toast.CENTER);
 
 
 
@@ -1729,7 +1775,8 @@ export default class GerSite extends React.Component {
 
                     <TouchableOpacity
                         style={styles.buttonContainer}
-                        onPress={() => this.senDataToGoogle()}
+                        onPress={() => this.generateChecklistNumber()}
+                    //onPress={() => this.senDataToGoogle()}
                     >
                         <Text style={styles.buttonText1}>Submit</Text>
                     </TouchableOpacity>
