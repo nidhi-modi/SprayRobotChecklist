@@ -266,8 +266,7 @@ export default class GerSite extends React.Component {
     componentDidMount() {
 
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
-
-
+        
         //getStorageData
         this.getAsyncData();
 
@@ -304,11 +303,11 @@ export default class GerSite extends React.Component {
 
         }
 
-        try {
+        /*try {
 
             AsyncStorage.getItem('sprayRobotNumber').then((text2Value) => {
 
-                this.setState({ sprayRobotNumber: text2Value });
+                this.setState({ sprayRobotNumber: JSON.parse(text2Value) });
 
             }).done();
         } catch (error) {
@@ -320,7 +319,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption1').then((text3Value) => {
 
-                this.setState({ radioOption1: text3Value });
+                this.setState({ radioOption1: JSON.parse(text3Value) });
 
             }).done();
         } catch (error) {
@@ -332,7 +331,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption2').then((text4Value) => {
 
-                this.setState({ radioOption2: text4Value });
+                this.setState({ radioOption2: JSON.parse(text4Value) });
 
             }).done();
         } catch (error) {
@@ -344,7 +343,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption3').then((text5Value) => {
 
-                this.setState({ radioOption3: text5Value });
+                this.setState({ radioOption3: JSON.parse(text5Value) });
 
             }).done();
         } catch (error) {
@@ -356,7 +355,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption4').then((text6Value) => {
 
-                this.setState({ radioOption4: text6Value });
+                this.setState({ radioOption4: JSON.parse(text6Value) });
 
             }).done();
         } catch (error) {
@@ -368,7 +367,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption5').then((text7Value) => {
 
-                this.setState({ radioOption5: text7Value });
+                this.setState({ radioOption5: JSON.parse(text7Value) });
 
             }).done();
         } catch (error) {
@@ -380,7 +379,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption6').then((text8Value) => {
 
-                this.setState({ radioOption6: text8Value });
+                this.setState({ radioOption6: JSON.parse(text8Value) });
 
             }).done();
         } catch (error) {
@@ -392,7 +391,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption7').then((text9Value) => {
 
-                this.setState({ radioOption7: text9Value });
+                this.setState({ radioOption7: JSON.parse(text9Value) });
 
             }).done();
         } catch (error) {
@@ -404,7 +403,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption8').then((text10Value) => {
 
-                this.setState({ radioOption8: text10Value });
+                this.setState({ radioOption8: JSON.parse(text10Value) });
 
             }).done();
         } catch (error) {
@@ -416,19 +415,19 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('radioOption9').then((text11Value) => {
 
-                this.setState({ radioOption9: text11Value });
+                this.setState({ radioOption9: JSON.parse(text11Value) });
 
             }).done();
         } catch (error) {
 
 
-        }
+        }*/
 
         try {
 
             AsyncStorage.getItem('submitterName').then((text12Value) => {
 
-                this.setState({ submitterName: text12Value });
+                this.setState({ submitterName: JSON.parse(text12Value) });
 
             }).done();
         } catch (error) {
@@ -440,7 +439,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment1').then((text13Value) => {
 
-                this.setState({ optionComment1: text13Value });
+                this.setState({ optionComment1: JSON.parse(text13Value) });
 
             }).done();
         } catch (error) {
@@ -452,7 +451,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment2').then((text14Value) => {
 
-                this.setState({ optionComment2: text14Value });
+                this.setState({ optionComment2: JSON.parse(text14Value) });
 
             }).done();
         } catch (error) {
@@ -464,7 +463,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment3').then((text15Value) => {
 
-                this.setState({ optionComment3: text15Value });
+                this.setState({ optionComment3: JSON.parse(text15Value) });
 
             }).done();
         } catch (error) {
@@ -476,7 +475,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment4').then((text16Value) => {
 
-                this.setState({ optionComment4: text16Value });
+                this.setState({ optionComment4: JSON.parse(text16Value) });
 
             }).done();
         } catch (error) {
@@ -488,7 +487,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment5').then((text17Value) => {
 
-                this.setState({ optionComment5: text17Value });
+                this.setState({ optionComment5: JSON.parse(text17Value) });
 
             }).done();
         } catch (error) {
@@ -500,7 +499,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment6').then((text18Value) => {
 
-                this.setState({ optionComment6: text18Value });
+                this.setState({ optionComment6: JSON.parse(text18Value) });
 
             }).done();
         } catch (error) {
@@ -512,7 +511,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment7').then((text19Value) => {
 
-                this.setState({ optionComment7: text19Value });
+                this.setState({ optionComment7: JSON.parse(text19Value) });
 
             }).done();
         } catch (error) {
@@ -524,7 +523,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment8').then((text20Value) => {
 
-                this.setState({ optionComment8: text20Value });
+                this.setState({ optionComment8: JSON.parse(text20Value) });
 
             }).done();
         } catch (error) {
@@ -536,7 +535,7 @@ export default class GerSite extends React.Component {
 
             AsyncStorage.getItem('optionComment9').then((text21Value) => {
 
-                this.setState({ optionComment9: text21Value });
+                this.setState({ optionComment9: JSON.parse(text21Value) });
 
             }).done();
         } catch (error) {
@@ -729,6 +728,89 @@ export default class GerSite extends React.Component {
 
     //
 
+    resetRadioButton = () => {
+
+        this.state.radioItems1.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems1: this.state.radioItems1 }, () => {
+            this.setState({ radioOption1: this.state.radioItems1[0].label });
+        });
+
+
+        this.state.radioItems2.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems2: this.state.radioItems2 }, () => {
+            this.setState({ radioOption2: this.state.radioItems2[0].label });
+        });
+
+
+        this.state.radioItems3.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems3: this.state.radioItems3 }, () => {
+            this.setState({ radioOption3: this.state.radioItems3[0].label });
+        });
+
+
+        this.state.radioItems4.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems4: this.state.radioItems4 }, () => {
+            this.setState({ radioOption4: this.state.radioItems4[0].label });
+        });
+
+
+        this.state.radioItems5.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems5: this.state.radioItems5 }, () => {
+            this.setState({ radioOption5: this.state.radioItems5[0].label });
+        });
+
+
+        this.state.radioItems6.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems6: this.state.radioItems6 }, () => {
+            this.setState({ radioOption6: this.state.radioItems6[0].label });
+        });
+
+
+        this.state.radioItems7.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems7: this.state.radioItems7 }, () => {
+            this.setState({ radioOption7: this.state.radioItems7[0].label });
+        });
+
+
+        this.state.radioItems8.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems8: this.state.radioItems8 }, () => {
+            this.setState({ radioOption8: this.state.radioItems8[0].label });
+        });
+
+
+        this.state.radioItems9.map((item) => {
+            item.selected = false;
+        });
+
+        this.setState({ radioItems9: this.state.radioItems9 }, () => {
+            this.setState({ radioOption9: this.state.radioItems9[0].label });
+        });
+    }
+
     //SETTING UP MODAL VISIBILITY 
 
     setModalVisible1 = (visible) => {
@@ -778,13 +860,85 @@ export default class GerSite extends React.Component {
 
 
 
+
     //
 
     //SUBMIT button
 
     senDataToGoogle = () => {
 
-        console.log("SUBMIT BUTTON CLICKED");
+
+        var sprayRobotNumber = this.state.sprayRobotNumber;
+        var siteName = this.state.siteName;
+        var option1 = this.state.radioOption1;
+        var option2 = this.state.radioOption2;
+        var option3 = this.state.radioOption3;
+        var option4 = this.state.radioOption4;
+        var option5 = this.state.radioOption5;
+        var option6 = this.state.radioOption6;
+        var option7 = this.state.radioOption7;
+        var option8 = this.state.radioOption8;
+        var option9 = this.state.radioOption9;
+        var yourName = this.state.submitterName;
+
+
+
+        if (sprayRobotNumber) {
+            if (yourName) {
+
+
+                const scriptUrl = 'https://script.google.com/macros/s/AKfycbwBPZserOXzIF7MMi3pdiL2pM9M2eF3_uw7da2tzJvSHLGUsas/exec';
+                const url = `${scriptUrl}?
+                callback=ctrlq&action=${'doPostData'}&site_name=${siteName}&robot_number=${sprayRobotNumber}&name=${yourName}&check_list1=${option1}&check_list1_comments=${this.state.optionComment1}&check_list2=${option2}&check_list2_comments=${this.state.optionComment2}&check_list3=${option3}&check_list3_comments=${this.state.optionComment3}&check_list4=${option4}&check_list4_comments=${this.state.optionComment4}&check_list5=${option5}&check_list5_comments=${this.state.optionComment5}&check_list6=${option6}&check_list6_comments=${this.state.optionComment6}&check_list7=${option7}&check_list7_comments=${this.state.optionComment7}&check_list8=${option8}&check_list8_comments=${this.state.optionComment8}&check_list9=${option9}&check_list9_comments=${this.state.optionComment9}`;
+
+                console.log("URL : " + url);
+                fetch(url, { mode: 'no-cors' }).then(
+                    () => { console.log("Data Send"); },
+                );
+
+                this.resetRadioButton();
+                AsyncStorage.removeItem('optionComment1');
+                AsyncStorage.removeItem('optionComment2');
+                AsyncStorage.removeItem('optionComment3');
+                AsyncStorage.removeItem('optionComment4');
+                AsyncStorage.removeItem('optionComment5');
+                AsyncStorage.removeItem('optionComment6');
+                AsyncStorage.removeItem('optionComment7');
+                AsyncStorage.removeItem('optionComment8');
+                AsyncStorage.removeItem('optionComment9');
+                AsyncStorage.removeItem('submitterName');
+                AsyncStorage.removeItem('sprayRobotNumber');
+
+                this.setState({ sprayRobotNumber: '' })
+                this.setState({ submitterName: '' })
+                this.setState({ optionComment1: '' })
+                this.setState({ optionComment2: '' })
+                this.setState({ optionComment3: '' })
+                this.setState({ optionComment4: '' })
+                this.setState({ optionComment5: '' })
+                this.setState({ optionComment6: '' })
+                this.setState({ optionComment7: '' })
+                this.setState({ optionComment8: '' })
+                this.setState({ optionComment9: '' })
+
+
+                this.refs._scrollView.scrollTo({x: 0, y: 0, animated: true});
+                Toast.showWithGravity('Success!! \Form Submitted Successfully.', Toast.LONG, Toast.CENTER);
+
+
+
+            } else {
+
+                alert('Please enter your name')
+
+            }
+
+        } else {
+
+            alert('Please select spray robot number')
+
+        }
+
     }
 
     render() {
@@ -795,7 +949,8 @@ export default class GerSite extends React.Component {
 
 
             <ScrollView style={styles.formContainer}
-                keyboardShouldPersistTaps='handled'>
+                keyboardShouldPersistTaps='handled'
+                ref='_scrollView'>
 
                 <SafeAreaView>
 
@@ -1073,7 +1228,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems3.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem3.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem3.bind(this, key)} value={this.state.radioOption3} />
                             ))
                         }
 
@@ -1396,7 +1551,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>9)  Confirm spray robot reaching to {"\n"}    the end of row: </Text>
+                        <Text style={styles.titleHeadingText}>9)  Confirm spray robot reaching {"\n"}     to the end of row: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1474,7 +1629,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>10)  Nozzle caps are on the correct {"\n"}    side (L/R): </Text>
+                        <Text style={styles.titleHeadingText}>10)  Nozzle caps are on the {"\n"}     correct side (L/R): </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1574,7 +1729,7 @@ export default class GerSite extends React.Component {
 
                     <TouchableOpacity
                         style={styles.buttonContainer}
-                        onPress={this.senDataToGoogle()}
+                        onPress={() => this.senDataToGoogle()}
                     >
                         <Text style={styles.buttonText1}>Submit</Text>
                     </TouchableOpacity>
@@ -1622,7 +1777,8 @@ const styles = StyleSheet.create({
         backgroundColor: '#2C903D',
         borderRadius: 10,
         padding: 10,
-        marginRight: 30,
+        marginRight: 20,
+        marginLeft: 10,
         marginBottom: 20,
         marginTop: 20,
         height: 55,
