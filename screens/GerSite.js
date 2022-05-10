@@ -1759,7 +1759,7 @@ export default class GerSite extends React.Component {
                             autoCapitalize="words"
                             multiline={false}
                             autoCorrect={false}
-                            enablesReturnKeyAutomatically={true}
+                            
                             onChangeText={(text) => this.updateTextInput(text, 'submitterName')}
                             returnKeyType={"done"}
                             keyboardType={'default'}
