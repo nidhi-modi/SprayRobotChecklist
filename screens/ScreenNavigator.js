@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { StyleSheet, View} from 'react-native'
 import AsyncStorage from '@react-native-community/async-storage';
+import Toast from 'react-native-simple-toast';
+
 
 
 var houseSelected;
@@ -27,7 +29,8 @@ export default class ScreenNavigator extends React.Component {
 
         if (houseSelected === 'HAR') {
 
-            this.props.navigation.navigate('GerSite');
+            //this.props.navigation.navigate('GerSite');
+
 
         } else if (houseSelected === 'GER') {
 
@@ -35,11 +38,13 @@ export default class ScreenNavigator extends React.Component {
 
         } else if (houseSelected === 'OHA') {
 
-            this.props.navigation.navigate('GerSite');
+            //this.props.navigation.navigate('GerSite');
+
 
         } else if (houseSelected === 'REP') {
 
-            this.props.navigation.navigate('GerSite');
+            //this.props.navigation.navigate('GerSite');
+
 
 
 

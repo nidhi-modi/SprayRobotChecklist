@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { StyleSheet, View, Text, Dimensions, TouchableOpacity, Image, ImageBackground, Alert, useEffect, ActivityIndicator } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import AsyncStorage from '@react-native-community/async-storage';
+import Toast from 'react-native-simple-toast';
 
 
 var houseSelected;
@@ -31,7 +32,8 @@ export default class SiteSelection extends React.Component {
 
         if (houseSelected === 'HAR') {
 
-          this.props.navigation.navigate('GerSite');
+          //this.props.navigation.navigate('GerSite');
+
 
         } else if (houseSelected === 'GER') {
 
@@ -40,11 +42,13 @@ export default class SiteSelection extends React.Component {
 
         } else if (houseSelected === 'OHA') {
 
-          this.props.navigation.navigate('GerSite');
+          //this.props.navigation.navigate('GerSite');
+
 
         } else if (houseSelected === 'REP') {
 
-          this.props.navigation.navigate('GerSite');
+          //this.props.navigation.navigate('GerSite');
+
 
         } else {
 
@@ -140,6 +144,7 @@ export default class SiteSelection extends React.Component {
 
           <TouchableOpacity
             style={styles.buttonContainer}
+            disabled={true}
             onPress={this.harAlertButton}>
             <Text style={styles.buttonText}>HAR</Text>
           </TouchableOpacity>
@@ -156,6 +161,7 @@ export default class SiteSelection extends React.Component {
 
           <TouchableOpacity
             style={styles.buttonContainer}
+            disabled={true}
             onPress={this.ohaAlertButton}>
             <Text style={styles.buttonText}>OHA</Text>
           </TouchableOpacity>
@@ -164,6 +170,7 @@ export default class SiteSelection extends React.Component {
 
           <TouchableOpacity
             style={styles.buttonContainer}
+            disabled={true}
             onPress={this.repAlertButton}>
             <Text style={styles.buttonText}>REP</Text>
           </TouchableOpacity>

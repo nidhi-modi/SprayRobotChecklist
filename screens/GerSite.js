@@ -1057,7 +1057,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible1(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1134,7 +1134,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible2(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1212,7 +1212,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible3(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1290,7 +1290,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible4(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1368,7 +1368,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible5(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1446,7 +1446,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible6(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1524,7 +1524,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible7(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1602,7 +1602,7 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible8(true)}>
-                            <Image source={require('../images/comments.png')}
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1680,7 +1680,8 @@ export default class GerSite extends React.Component {
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible9(true)}>
-                            <Image source={require('../images/comments.png')}
+
+                            <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
 
@@ -1759,7 +1760,7 @@ export default class GerSite extends React.Component {
                             autoCapitalize="words"
                             multiline={false}
                             autoCorrect={false}
-                            
+
                             onChangeText={(text) => this.updateTextInput(text, 'submitterName')}
                             returnKeyType={"done"}
                             keyboardType={'default'}
