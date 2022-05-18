@@ -25,8 +25,6 @@ export default class ScreenNavigator extends React.Component {
 
         AsyncStorage.setItem('house', JSON.stringify(houseSelected));
 
-        console.log("Data Saved successfully : " + JSON.stringify(houseSelected));
-
         if (houseSelected === 'HAR') {
 
             //this.props.navigation.navigate('GerSite');

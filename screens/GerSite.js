@@ -1,12 +1,16 @@
 import React, { Component } from 'react';
-import { StyleSheet, View, BackHandler, Text, TouchableOpacity, TouchableHighlight, Image, TextInput, Modal, Pressable, Dimensions } from 'react-native'
+import { StyleSheet, View, BackHandler, Text, TouchableOpacity, TouchableHighlight, Image, TextInput, Modal, Pressable, Dimensions, Keyboard, ActivityIndicator, LogBox } from 'react-native'
 import { ScrollView } from 'react-native-gesture-handler';
 import Toast from 'react-native-simple-toast';
 import AsyncStorage from '@react-native-community/async-storage';
 import DropDownPicker from 'react-native-dropdown-picker';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import RNDropDownPicker from '@nectr-rn/react-native-dropdown-picker';
+import Icon from 'react-native-vector-icons/Feather';
+import moment from 'moment';
 
-var houseSelected;
+
+var houseSelected, houseNumberSelected, rowNumberSelected;
 var random = 0;
 var width = Dimensions.get('window').width / 1.1;
 
@@ -44,6 +48,9 @@ export default class GerSite extends React.Component {
         this.state = {
 
             siteName: '',
+            rowNumber: '',
+            showDropDown: false,
+            houseNumber: '',
             sprayRobotNumber: '',
             radioOption1: '',
             radioOption2: '',
@@ -53,7 +60,7 @@ export default class GerSite extends React.Component {
             radioOption6: '',
             radioOption7: '',
             radioOption8: '',
-            radioOption9: '',
+
             submitterName: '',
             modalVisible1: false,
             modalVisible2: false,
@@ -72,8 +79,13 @@ export default class GerSite extends React.Component {
             optionComment6: '',
             optionComment7: '',
             optionComment8: '',
-            optionComment9: '',
+
             checkListNumber: '',
+            combinedData: [],
+            filteredArrayRowNumber: [],
+            isLoading: true,
+            filteredRowNumber: '',
+            filteredBySprayRobot: [],
 
             radioItems1:
                 [
@@ -227,24 +239,7 @@ export default class GerSite extends React.Component {
                     }
                 ],
 
-            radioItems9:
-                [
 
-                    {
-                        label: 'Yes',
-                        size: 30,
-                        color: 'green',
-                        selected: false,
-
-                    },
-
-                    {
-                        label: 'No',
-                        size: 30,
-                        color: 'red',
-                        selected: false
-                    }
-                ],
 
         }
 
@@ -254,6 +249,9 @@ export default class GerSite extends React.Component {
     //Generate checkList number
 
     generateChecklistNumber = () => {
+
+        Keyboard.dismiss();
+        this.setState({ isLoading: true });
 
         if (this.state.checkListNumber !== null || this.state.checkListNumber !== '') {
 
@@ -273,7 +271,7 @@ export default class GerSite extends React.Component {
         else {
 
             this.senDataToGoogle();
-
+        
         }
 
     }
@@ -297,15 +295,32 @@ export default class GerSite extends React.Component {
 
         BackHandler.addEventListener('hardwareBackPress', this.handleBackButton);
 
-        //getStorageData
-        this.getAsyncData();
+        LogBox.ignoreAllLogs();
+
+
+        //Always get the site name.
+        try {
+
+            AsyncStorage.getItem('house').then((text1Value) => {
+                houseSelected = JSON.parse(text1Value);
+                this.setState({ siteName: houseSelected });
+
+
+
+            }).done();
+        } catch (error) {
+
+
+        }
 
         this.focusListener = this.props.navigation.addListener('focus', () => {
 
-            this.getAsyncData();
-
+            this.getGoogleData();
+            //this.getAsyncData();
+            this.setState({ isLoading: true });
 
         });
+
 
     }
 
@@ -316,16 +331,230 @@ export default class GerSite extends React.Component {
         BackHandler.removeEventListener('hardwareBackPress', this.handleBackButton);
     }
 
+    getGoogleData = () => {
+
+        this.setState({ isLoading: true });
+
+        const scriptUrl1 = 'https://script.google.com/macros/s/AKfycbwBPZserOXzIF7MMi3pdiL2pM9M2eF3_uw7da2tzJvSHLGUsas/exec';
+        const url1 = `${scriptUrl1}?callback=ctrlq&action=${'doGetData'}`;
+
+        console.log("URL : " + url1);
+        fetch(url1, { mode: 'no-cors' }).then((response) => response.json())
+            .then((responseJson) => {
+
+                this.setState({ combinedData: responseJson }, () => {
+
+                    this.setState({ combinedData: responseJson });
+                });
+
+                console.log("OUTPUT : " + JSON.stringify(responseJson));
+                this.setState({ isLoading: true });
+
+                this.getAsyncData();
+
+            }).catch((error) => {
+
+                console.log(error);
+                this.setState({ isLoading: false });
+
+            });
+
+    }
+
+    renderEntryData = () => {
+
+        if (this.state.combinedData.length != 0) {
+
+            if (this.state.houseNumber === null) {
+
+
+
+            } else {
+
+
+                const lastRowNumberBasedOnHouse = d => d.house_number === this.state.houseNumber;
+
+                const filteredData = this.state.combinedData.items.filter(lastRowNumberBasedOnHouse);
+
+                console.log("FILTERED : " + filteredData);
+
+                if (filteredData.length != 0) {
+
+                    const lastEntryFromList = filteredData[filteredData.length - 1];
+
+                    const lastRowNumber = lastEntryFromList.row_number;
+
+                    rowNumberSelected = lastRowNumber
+
+                    this.setState({
+
+                        filteredRowNumber: rowNumberSelected
+
+                    }, () => {
+
+                        this.setState({ filteredRowNumber: lastRowNumber });
+                    });
+
+                }
+
+            }
+        } else {
+
+
+
+        }
+
+    }
+
+
+
+    renderDataBasedOnRobotNumber = (robotNumber) => {
+
+
+        //this format May 17, 2022 10:31:16 AM NZST
+
+        var currentDate = moment().format("MMM DD, YYYY hh:mm:ss a").toString();
+        var yesterdaysDate = moment().subtract(1, 'days').format("MMM DD, YYYY hh:mm:ss a").toString();
+
+
+        //convert string to int
+        const int_robot_number = +robotNumber;
+
+        if (this.state.combinedData.length != 0) {
+
+            const filteredDataBasedOnRobotNumber = d => d.robot_number === int_robot_number && d.timestamp >= yesterdaysDate;
+
+            const finalData = this.state.combinedData.items.filter(filteredDataBasedOnRobotNumber);
+
+            if (finalData.length != 0) {
+
+                const lastRobotEntryFromList = finalData[finalData.length - 1];
+
+                this.setState({
+
+                    filteredBySprayRobot: lastRobotEntryFromList
+
+                }, () => {
+
+                    this.setState({ filteredBySprayRobot: lastRobotEntryFromList });
+                });
+
+                this.setDataToUI(lastRobotEntryFromList);
+
+            }
+
+            console.log("ROBOT  : " + JSON.stringify(finalData));
+
+        }
+
+    }
+
+    setDataToUI = (data) => {
+
+        if (data.length != 0) {
+
+            var option1Data = data.check_list1;
+            var option2Data = data.check_list2;
+            var option3Data = data.check_list3;
+            var option4Data = data.check_list4;
+            var option5Data = data.check_list5;
+            var option6Data = data.check_list6;
+            var option7Data = data.check_list7;
+            var option8Data = data.check_list8;
+
+
+            //RADIO OPTION 1
+            this.state.radioItems1.filter(item => item.label === option1Data).map((item) => {
+
+                item.selected = true;
+
+                this.setState({ radioOption1: option1Data })
+
+
+            });
+
+            //RADIO OPTION 2
+            this.state.radioItems2.filter(item => item.label === option2Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+            //RADIO OPTION 3
+            this.state.radioItems3.filter(item => item.label === option3Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+            //RADIO OPTION 4
+            this.state.radioItems4.filter(item => item.label === option4Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+            //RADIO OPTION 5
+            this.state.radioItems5.filter(item => item.label === option5Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+            //RADIO OPTION 6
+            this.state.radioItems6.filter(item => item.label === option6Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+            //RADIO OPTION 7
+            this.state.radioItems7.filter(item => item.label === option7Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+            //RADIO OPTION 8
+            this.state.radioItems8.filter(item => item.label === option8Data).map((item) => {
+
+                item.selected = true;
+
+            });
+
+        }
+    }
 
     //GET DATA
 
     getAsyncData = () => {
+
+        this.setState({ isLoading: true });
 
         try {
 
             AsyncStorage.getItem('house').then((text1Value) => {
                 houseSelected = JSON.parse(text1Value);
                 this.setState({ siteName: houseSelected });
+
+
+
+            }).done();
+        } catch (error) {
+
+
+        }
+
+        try {
+
+            AsyncStorage.getItem('sprayRobotNumber').then((text2Value) => {
+
+                this.setState({ sprayRobotNumber: JSON.parse(text2Value) });
+
+                if (JSON.parse(text2Value) != '' || JSON.parse(text2Value) != null) {
+
+                    this.renderDataBasedOnRobotNumber(JSON.parse(text2Value));
+                }
 
             }).done();
         } catch (error) {
@@ -334,18 +563,6 @@ export default class GerSite extends React.Component {
         }
 
         /*try {
-    
-            AsyncStorage.getItem('sprayRobotNumber').then((text2Value) => {
-    
-                this.setState({ sprayRobotNumber: JSON.parse(text2Value) });
-    
-            }).done();
-        } catch (error) {
-    
-    
-        }
-    
-        try {
     
             AsyncStorage.getItem('radioOption1').then((text3Value) => {
     
@@ -561,17 +778,7 @@ export default class GerSite extends React.Component {
 
         }
 
-        try {
 
-            AsyncStorage.getItem('optionComment9').then((text21Value) => {
-
-                this.setState({ optionComment9: JSON.parse(text21Value) });
-
-            }).done();
-        } catch (error) {
-
-
-        }
 
         try {
 
@@ -584,6 +791,38 @@ export default class GerSite extends React.Component {
 
 
         }
+
+        try {
+
+            AsyncStorage.getItem('houseNumber').then((text23Value) => {
+
+                this.setState({ houseNumber: JSON.parse(text23Value) });
+
+                if (JSON.parse(text23Value) != '' || JSON.parse(text23Value) != null) {
+
+                    this.renderEntryData();
+                }
+
+            }).done();
+        } catch (error) {
+
+
+        }
+
+        try {
+
+            AsyncStorage.getItem('rowNumber').then((text24Value) => {
+
+                this.setState({ rowNumber: JSON.parse(text24Value) });
+
+            }).done();
+        } catch (error) {
+
+
+        }
+
+        this.setState({ isLoading: false });
+
 
     }
 
@@ -610,6 +849,19 @@ export default class GerSite extends React.Component {
         this.setState(state);
     }
 
+    updateDropdown = (text, field) => {
+
+        houseNumberSelected = text;
+
+
+        this.setItem(field, text)
+        const state = this.state
+        state[field] = text;
+        this.setState(state);
+
+        this.renderEntryData();
+    }
+
 
     //SPRAY NUMBERS
 
@@ -617,7 +869,15 @@ export default class GerSite extends React.Component {
 
 
         this.setItem('sprayRobotNumber', number)
-        this.setState({ sprayRobotNumber: number })
+
+        this.setState({
+            sprayRobotNumber: number
+        }, () => {
+
+            this.setState({ sprayRobotNumber: number });
+        });
+
+        this.renderDataBasedOnRobotNumber(number);
 
 
     }
@@ -636,6 +896,7 @@ export default class GerSite extends React.Component {
         this.state.radioItems1[index].selected = true;
 
         this.setState({ radioItems1: this.state.radioItems1 }, () => {
+
             this.setState({ radioOption1: this.state.radioItems1[index].label });
         });
     }
@@ -754,21 +1015,7 @@ export default class GerSite extends React.Component {
 
     //
 
-    //ITEM 9
 
-    changeItem9(index) {
-        this.state.radioItems9.map((item) => {
-            item.selected = false;
-        });
-
-        this.state.radioItems9[index].selected = true;
-
-        this.setState({ radioItems9: this.state.radioItems9 }, () => {
-            this.setState({ radioOption9: this.state.radioItems9[index].label });
-        });
-    }
-
-    //
 
     resetRadioButton = () => {
 
@@ -844,13 +1091,7 @@ export default class GerSite extends React.Component {
         });
 
 
-        this.state.radioItems9.map((item) => {
-            item.selected = false;
-        });
 
-        this.setState({ radioItems9: this.state.radioItems9 }, () => {
-            this.setState({ radioOption9: this.state.radioItems9[0].label });
-        });
     }
 
     //SETTING UP MODAL VISIBILITY 
@@ -895,12 +1136,11 @@ export default class GerSite extends React.Component {
     }
 
 
-    setModalVisible9 = (visible) => {
-        this.setState({ modalVisible9: visible });
+
+
+    setShowDropDown = (visibility) => {
+        this.setState({ showDropDown: visibility })
     }
-
-
-
 
 
     //
@@ -909,6 +1149,7 @@ export default class GerSite extends React.Component {
 
     senDataToGoogle = () => {
 
+        this.setState({ isLoading: true });
 
         var sprayRobotNumber = this.state.sprayRobotNumber;
         var siteName = this.state.siteName;
@@ -920,68 +1161,95 @@ export default class GerSite extends React.Component {
         var option6 = this.state.radioOption6;
         var option7 = this.state.radioOption7;
         var option8 = this.state.radioOption8;
-        var option9 = this.state.radioOption9;
         var yourName = this.state.submitterName;
         var number = this.state.checkListNumber;
+        var houseNumber = this.state.houseNumber;
+        var rowNumber = this.state.rowNumber;
+
 
 
 
         if (sprayRobotNumber) {
-            if (yourName) {
+            if (houseNumber) {
+                if (rowNumber) {
+                    if (yourName) {
 
 
-                const scriptUrl = 'https://script.google.com/macros/s/AKfycbwBPZserOXzIF7MMi3pdiL2pM9M2eF3_uw7da2tzJvSHLGUsas/exec';
-                const url = `${scriptUrl}?
-                callback=ctrlq&action=${'doPostData'}&checklist_number=${number}&site_name=${siteName}&robot_number=${sprayRobotNumber}&name=${yourName}&check_list1=${option1}&check_list1_comments=${this.state.optionComment1}&check_list2=${option2}&check_list2_comments=${this.state.optionComment2}&check_list3=${option3}&check_list3_comments=${this.state.optionComment3}&check_list4=${option4}&check_list4_comments=${this.state.optionComment4}&check_list5=${option5}&check_list5_comments=${this.state.optionComment5}&check_list6=${option6}&check_list6_comments=${this.state.optionComment6}&check_list7=${option7}&check_list7_comments=${this.state.optionComment7}&check_list8=${option8}&check_list8_comments=${this.state.optionComment8}&check_list9=${option9}&check_list9_comments=${this.state.optionComment9}`;
+                        const scriptUrl = 'https://script.google.com/macros/s/AKfycbwBPZserOXzIF7MMi3pdiL2pM9M2eF3_uw7da2tzJvSHLGUsas/exec';
+                        const url = `${scriptUrl}?
+                callback=ctrlq&action=${'doPostData'}&checklist_number=${number}&site_name=${siteName}&house_number=${houseNumber}&robot_number=${sprayRobotNumber}&name=${yourName}&row_number=${rowNumber}&check_list1=${option1}&check_list1_comments=${this.state.optionComment1}&check_list2=${option2}&check_list2_comments=${this.state.optionComment2}&check_list3=${option3}&check_list3_comments=${this.state.optionComment3}&check_list4=${option4}&check_list4_comments=${this.state.optionComment4}&check_list5=${option5}&check_list5_comments=${this.state.optionComment5}&check_list6=${option6}&check_list6_comments=${this.state.optionComment6}&check_list7=${option7}&check_list7_comments=${this.state.optionComment7}&check_list8=${option8}&check_list8_comments=${this.state.optionComment8}`;
 
-                console.log("URL : " + url);
-                fetch(url, { mode: 'no-cors' }).then(
-                    () => { console.log("Data Send"); },
-                );
+                        console.log("URL : " + url);
+                        fetch(url, { mode: 'no-cors' }).then(
+                            () => { console.log("Data Send"); },
+                        );
 
-                this.resetRadioButton();
-                AsyncStorage.removeItem('optionComment1');
-                AsyncStorage.removeItem('optionComment2');
-                AsyncStorage.removeItem('optionComment3');
-                AsyncStorage.removeItem('optionComment4');
-                AsyncStorage.removeItem('optionComment5');
-                AsyncStorage.removeItem('optionComment6');
-                AsyncStorage.removeItem('optionComment7');
-                AsyncStorage.removeItem('optionComment8');
-                AsyncStorage.removeItem('optionComment9');
-                AsyncStorage.removeItem('submitterName');
-                AsyncStorage.removeItem('sprayRobotNumber');
-                AsyncStorage.removeItem('checkListNumber');
+                        this.resetRadioButton();
+                        AsyncStorage.removeItem('optionComment1');
+                        AsyncStorage.removeItem('optionComment2');
+                        AsyncStorage.removeItem('optionComment3');
+                        AsyncStorage.removeItem('optionComment4');
+                        AsyncStorage.removeItem('optionComment5');
+                        AsyncStorage.removeItem('optionComment6');
+                        AsyncStorage.removeItem('optionComment7');
+                        AsyncStorage.removeItem('optionComment8');
+                        AsyncStorage.removeItem('submitterName');
+                        AsyncStorage.removeItem('sprayRobotNumber');
+                        AsyncStorage.removeItem('checkListNumber');
+                        AsyncStorage.removeItem('houseNumber');
+                        AsyncStorage.removeItem('rowNumber');
 
-
-                this.setState({ sprayRobotNumber: '' })
-                this.setState({ submitterName: '' })
-                this.setState({ optionComment1: '' })
-                this.setState({ optionComment2: '' })
-                this.setState({ optionComment3: '' })
-                this.setState({ optionComment4: '' })
-                this.setState({ optionComment5: '' })
-                this.setState({ optionComment6: '' })
-                this.setState({ optionComment7: '' })
-                this.setState({ optionComment8: '' })
-                this.setState({ optionComment9: '' })
-                this.setState({ checkListNumber: '' })
-
-
-                this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
-                Toast.showWithGravity('Success!! \nForm Submitted Successfully.', Toast.LONG, Toast.CENTER);
+                        this.setState({ sprayRobotNumber: '' })
+                        this.setState({ submitterName: '' })
+                        this.setState({ optionComment1: '' })
+                        this.setState({ optionComment2: '' })
+                        this.setState({ optionComment3: '' })
+                        this.setState({ optionComment4: '' })
+                        this.setState({ optionComment5: '' })
+                        this.setState({ optionComment6: '' })
+                        this.setState({ optionComment7: '' })
+                        this.setState({ optionComment8: '' })
+                        this.setState({ checkListNumber: '' })
+                        this.setState({ rowNumber: '' })
+                        this.setState({ houseNumber: null })
+                        this.setState({ filteredRowNumber: '' })
 
 
+
+                        this.setState({ isLoading: true });
+
+                        this.getGoogleData();
+                        Toast.showWithGravity('Success!! \nForm Submitted Successfully.', Toast.LONG, Toast.CENTER);
+                        //this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
+
+
+
+                    } else {
+
+                        alert('Please enter your name')
+                        this.setState({ isLoading: false });
+
+                    }
+
+                } else {
+
+                    alert('Please row number')
+                    this.setState({ isLoading: false });
+
+                }
 
             } else {
 
-                alert('Please enter your name')
+                alert('Select house number')
+                this.setState({ isLoading: false });
 
             }
 
         } else {
 
             alert('Please select spray robot number')
+            this.setState({ isLoading: false });
+
 
         }
 
@@ -989,7 +1257,18 @@ export default class GerSite extends React.Component {
 
     render() {
 
-        const { modalVisible1, modalVisible2, modalVisible3, modalVisible4, modalVisible5, modalVisible6, modalVisible7, modalVisible8, modalVisible9 } = this.state;
+        const { modalVisible1, modalVisible2, modalVisible3, modalVisible4, modalVisible5, modalVisible6, modalVisible7, modalVisible8 } = this.state;
+
+
+        if (this.state.isLoading) {
+            return (
+                <View style={styles.activity}>
+                    <Text style={styles.fetchingText}>Loading.{"\n"}Please wait...</Text>
+                    <ActivityIndicator size="large" color="#0000ff" />
+                </View>
+            )
+        }
+
 
         return (
 
@@ -1006,7 +1285,45 @@ export default class GerSite extends React.Component {
 
                     <View style={styles.marginDimension}></View>
 
-                    <Text style={styles.titleHeadingText}>1)  Select Spray Robot Number: </Text>
+                    <Text style={styles.titleHeadingText}>1)  Select House Number: </Text>
+
+                    <View style={styles.marginDimension}></View>
+
+
+
+                    <View style={styles.borderRightEdit}>
+
+                        <RNDropDownPicker
+                            items={[
+                                { label: 'GER 1', value: 'GER 1', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                                { label: 'GER 2', value: 'GER 2', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                                { label: 'GER 3', value: 'GER 3', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                                { label: 'GER 4', value: 'GER 4', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                                { label: 'GER 5', value: 'GER 5', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                            ]}
+                            placeholder="SELECT"
+                            containerStyle={{ height: 60 }}
+                            style={styles.borderEditDrop}
+                            itemStyle={{
+                                justifyContent: 'flex-start'
+                            }}
+                            dropDownStyle={{ backgroundColor: '#fafafa' }}
+                            labelStyle={{
+                                fontSize: 15,
+                                textAlign: 'left',
+                                color: '#000000'
+                            }}
+                            onChangeItem={(item) => this.updateDropdown(item.value, 'houseNumber')}
+                            defaultValue={this.state.houseNumber}
+
+                        />
+
+                    </View>
+
+
+                    <View style={styles.inBtnmarginDimension}></View>
+
+                    <Text style={styles.titleHeadingText}>2)  Select Spray Robot Number: </Text>
 
                     <View style={styles.marginDimension}></View>
 
@@ -1052,7 +1369,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>2)  Correct nozzle type: </Text>
+                        <Text style={styles.titleHeadingText}>3)  Correct nozzle type: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1129,7 +1446,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>3)  Nozzles are not blocked: </Text>
+                        <Text style={styles.titleHeadingText}>4)  Nozzles are not blocked: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1206,8 +1523,9 @@ export default class GerSite extends React.Component {
 
                     <View style={styles.inBtnmarginDimension}></View>
 
+
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>4)  Noozles are open: </Text>
+                        <Text style={styles.titleHeadingText}>5)  Nozzle filters and robot {"\n"}    filter are clean: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1231,7 +1549,7 @@ export default class GerSite extends React.Component {
                         >
                             <View style={styles.centeredView}>
                                 <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>Comments - nozzles are open: </Text>
+                                    <Text style={styles.modalText}>Comments - nozzles filters and robot filter are clean: </Text>
 
                                     <TextInput
                                         style={styles.input}
@@ -1274,7 +1592,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems3.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem3.bind(this, key)} value={this.state.radioOption3} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem3.bind(this, key)} />
                             ))
                         }
 
@@ -1285,11 +1603,12 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>5)  Nozzle filters and robot {"\n"}    filter are clean: </Text>
+                        <Text style={styles.titleHeadingText}>6)  Nozzle caps are on the {"\n"}     correct side (L/R): </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
                             onPress={() => this.setModalVisible4(true)}>
+
                             <Image source={require('../images/comments_black.png')}
 
                                 style={styles.FloatingButtonStyle2} />
@@ -1303,13 +1622,14 @@ export default class GerSite extends React.Component {
                             animationType="slide"
                             transparent={true}
                             visible={modalVisible4}
+
                             onRequestClose={() => {
                                 this.setModalVisible4(!modalVisible4);
                             }}
                         >
                             <View style={styles.centeredView}>
                                 <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>Comments - nozzles filters and robot filter are clean: </Text>
+                                    <Text style={styles.modalText}>Comments - nozzles caps are on the correct side (L/R): </Text>
 
                                     <TextInput
                                         style={styles.input}
@@ -1363,7 +1683,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>6)  Front/side noozle on and {"\n"}     pressure reading: </Text>
+                        <Text style={styles.titleHeadingText}>7)  Extension boom height {"\n"}     Adjusted: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1387,7 +1707,7 @@ export default class GerSite extends React.Component {
                         >
                             <View style={styles.centeredView}>
                                 <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>Comments - front/side noozle on and pressure reading: </Text>
+                                    <Text style={styles.modalText}>Comments - extension boom height Adjusted: </Text>
 
                                     <TextInput
                                         style={styles.input}
@@ -1441,7 +1761,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>7)  Oil check on the spray pump: </Text>
+                        <Text style={styles.titleHeadingText}>8)  Front/side noozle on and {"\n"}     pressure reading: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1465,7 +1785,7 @@ export default class GerSite extends React.Component {
                         >
                             <View style={styles.centeredView}>
                                 <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>Comments - oil check on the spray pump: </Text>
+                                    <Text style={styles.modalText}>Comments - front/side noozle on and pressure reading: </Text>
 
                                     <TextInput
                                         style={styles.input}
@@ -1519,7 +1839,7 @@ export default class GerSite extends React.Component {
                     <View style={styles.inBtnmarginDimension}></View>
 
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>8)  Extension boom height: </Text>
+                        <Text style={styles.titleHeadingText}>9)  Oil check on the spray pump: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1543,7 +1863,7 @@ export default class GerSite extends React.Component {
                         >
                             <View style={styles.centeredView}>
                                 <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>Comments - extension boom height: </Text>
+                                    <Text style={styles.modalText}>Comments - oil check on the spray pump: </Text>
 
                                     <TextInput
                                         style={styles.input}
@@ -1596,8 +1916,10 @@ export default class GerSite extends React.Component {
 
                     <View style={styles.inBtnmarginDimension}></View>
 
+
+
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>9)  Confirm spray robot reaching {"\n"}     to the end of row: </Text>
+                        <Text style={styles.titleHeadingText}>10)  Confirm spray robot reaching {"\n"}     to the end of row: </Text>
                         <View style={styles.leftmarginDimension}></View>
 
                         <TouchableOpacity style={styles.TouchableOpacityStyle}
@@ -1674,86 +1996,33 @@ export default class GerSite extends React.Component {
 
                     <View style={styles.inBtnmarginDimension}></View>
 
+
+                    <Text style={styles.titleHeadingText}>11)  Row Number: </Text>
                     <View style={styles.direction}>
-                        <Text style={styles.titleHeadingText}>10)  Nozzle caps are on the {"\n"}     correct side (L/R): </Text>
-                        <View style={styles.leftmarginDimension}></View>
 
-                        <TouchableOpacity style={styles.TouchableOpacityStyle}
-                            onPress={() => this.setModalVisible9(true)}>
-
-                            <Image source={require('../images/comments_black.png')}
-
-                                style={styles.FloatingButtonStyle2} />
-
-                        </TouchableOpacity>
+                        <Text style={styles.redHeadingText}>         Last Row Done for House {this.state.houseNumber}: </Text>
+                        <Text style={styles.redBoldHeadingText}>  {this.state.filteredRowNumber}</Text>
                     </View>
+                    <View style={styles.borderEdit}>
+                        <TextInput style={styles.textInputStyle}
+                            autoCapitalize="words"
+                            multiline={false}
+                            autoCorrect={false}
 
+                            onChangeText={(text) => this.updateTextInput(text, 'rowNumber')}
+                            returnKeyType={"done"}
+                            keyboardType={'number-pad'}
+                            value={this.state.rowNumber}
 
-                    <View style={styles.centeredView}>
-                        <Modal
-                            animationType="slide"
-                            transparent={true}
-                            visible={modalVisible9}
-                            onRequestClose={() => {
-                                this.setModalVisible9(!modalVisible9);
-                            }}
-                        >
-                            <View style={styles.centeredView}>
-                                <View style={styles.modalView}>
-                                    <Text style={styles.modalText}>Comments - nozzles caps are on the correct side (L/R): </Text>
-
-                                    <TextInput
-                                        style={styles.input}
-                                        autoCapitalize="sentences"
-                                        multiline={true}
-                                        autoCorrect={false}
-                                        enablesReturnKeyAutomatically={true}
-                                        onChangeText={(text) => this.updateTextInput(text, 'optionComment9')}
-                                        returnKeyType={"done"}
-                                        keyboardType={'default'}
-                                        value={this.state.optionComment9}
-                                    />
-
-                                    <View style={styles.direction}>
-                                        <Pressable
-                                            style={[styles.button, styles.buttonSubmit]}
-                                            onPress={() => this.setModalVisible9(!modalVisible9)}
-                                        >
-                                            <Text style={styles.textStyle}>Submit</Text>
-                                        </Pressable>
-
-                                        <View style={styles.marginRightModal}></View>
-
-                                        <Pressable
-                                            style={[styles.button, styles.buttonCancel]}
-                                            onPress={() => this.setModalVisible9(!modalVisible9)}
-                                        >
-                                            <Text style={styles.textStyle}>Cancel</Text>
-                                        </Pressable>
-
-                                    </View>
-                                </View>
-                            </View>
-                        </Modal>
+                        />
 
                     </View>
-
-                    <View style={styles.flexDirection}>
-
-                        {
-                            this.state.radioItems9.map((item, key) =>
-                            (
-                                <RadioButton key={key} button={item} onClick={this.changeItem9.bind(this, key)} />
-                            ))
-                        }
-
-
-                    </View>
-
 
                     <View style={styles.inBtnmarginDimension}></View>
 
-                    <Text style={styles.titleHeadingText}>Submitter's Name: </Text>
+
+
+                    <Text style={styles.titleHeadingText}>12)  Submitter's Name: </Text>
 
                     <View style={styles.borderEdit}>
                         <TextInput style={styles.textInputStyle}
@@ -1784,6 +2053,7 @@ export default class GerSite extends React.Component {
 
 
                 </SafeAreaView>
+
 
 
             </ScrollView >
@@ -1847,6 +2117,19 @@ const styles = StyleSheet.create({
         fontSize: 19,
         fontWeight: 'bold'
 
+    },
+
+    redHeadingText: {
+
+        color: '#990011FF',
+        fontSize: 16,
+    },
+
+    redBoldHeadingText: {
+
+        color: '#990011FF',
+        fontSize: 19,
+        fontWeight: 'bold'
     },
 
     radioButton:
@@ -1963,6 +2246,13 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start',
     },
 
+    textRowDirection: {
+
+        flexDirection: 'row',
+        alignItems: 'stretch',
+        justifyContent: 'flex-start',
+    },
+
     TouchableOpacityStyle: {
 
 
@@ -1990,6 +2280,21 @@ const styles = StyleSheet.create({
         borderColor: '#000000',
         borderWidth: 1,
         borderRadius: 5,
+    },
+
+    borderEditDrop: {
+
+        marginTop: 8,
+        borderColor: '#000000',
+        borderWidth: 1,
+        borderRadius: 5,
+    },
+
+    borderRightEdit: {
+
+        marginRight: 20,
+        zIndex: 100,
+        flex: 1
     },
 
     textInputStyle: {
@@ -2068,6 +2373,26 @@ const styles = StyleSheet.create({
         marginBottom: 12
 
     },
+
+    activity: {
+        position: 'absolute',
+        left: 0,
+        right: 0,
+        top: 0,
+        bottom: 0,
+        alignItems: 'center',
+        justifyContent: 'center'
+    },
+
+    fetchingText: {
+
+        fontSize: 23,
+        color: '#000000',
+        fontWeight: 'bold',
+        fontStyle: 'italic',
+        marginBottom: 10
+
+    }
 })
 
 
