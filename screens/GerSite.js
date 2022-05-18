@@ -395,6 +395,9 @@ export default class GerSite extends React.Component {
                         this.setState({ filteredRowNumber: lastRowNumber });
                     });
 
+                }else{
+
+                    this.setState({filteredRowNumber: ''})
                 }
 
             }
@@ -441,6 +444,9 @@ export default class GerSite extends React.Component {
 
                 this.setDataToUI(lastRobotEntryFromList);
 
+            }else{
+
+                this.resetRadioButton();
             }
 
             console.log("ROBOT  : " + JSON.stringify(finalData));
@@ -451,6 +457,7 @@ export default class GerSite extends React.Component {
 
     setDataToUI = (data) => {
 
+        console.log("khdfhjhfjdhf  :"+data.length);
         if (data.length != 0) {
 
             var option1Data = data.check_list1;
@@ -478,12 +485,18 @@ export default class GerSite extends React.Component {
 
                 item.selected = true;
 
+                this.setState({ radioOption2: option2Data })
+
+
             });
 
             //RADIO OPTION 3
             this.state.radioItems3.filter(item => item.label === option3Data).map((item) => {
 
                 item.selected = true;
+
+                this.setState({ radioOption3: option3Data })
+
 
             });
 
@@ -492,12 +505,18 @@ export default class GerSite extends React.Component {
 
                 item.selected = true;
 
+                this.setState({ radioOption4: option4Data })
+
+
             });
 
             //RADIO OPTION 5
             this.state.radioItems5.filter(item => item.label === option5Data).map((item) => {
 
                 item.selected = true;
+
+                this.setState({ radioOption5: option5Data })
+
 
             });
 
@@ -506,12 +525,18 @@ export default class GerSite extends React.Component {
 
                 item.selected = true;
 
+                this.setState({ radioOption6: option6Data })
+
+
             });
 
             //RADIO OPTION 7
             this.state.radioItems7.filter(item => item.label === option7Data).map((item) => {
 
                 item.selected = true;
+
+                this.setState({ radioOption7: option7Data })
+
 
             });
 
@@ -520,8 +545,80 @@ export default class GerSite extends React.Component {
 
                 item.selected = true;
 
+                this.setState({ radioOption8: option8Data })
+
+
             });
 
+        }else{
+
+            this.resetRadioButton()
+
+             //RADIO OPTION 1
+             this.state.radioItems1.filter(item => item.label === option1Data).map((item) => {
+
+                item.selected = true;
+
+                this.setState({ radioOption1: option1Data })
+
+
+            });
+
+            //RADIO OPTION 2
+            this.state.radioItems2.filter(item => item.label === option2Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
+
+            //RADIO OPTION 3
+            this.state.radioItems3.filter(item => item.label === option3Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
+
+            //RADIO OPTION 4
+            this.state.radioItems4.filter(item => item.label === option4Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
+
+            //RADIO OPTION 5
+            this.state.radioItems5.filter(item => item.label === option5Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
+
+            //RADIO OPTION 6
+            this.state.radioItems6.filter(item => item.label === option6Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
+
+            //RADIO OPTION 7
+            this.state.radioItems7.filter(item => item.label === option7Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
+
+            //RADIO OPTION 8
+            this.state.radioItems8.filter(item => item.label === option8Data).map((item) => {
+
+                item.selected = false;
+
+
+            });
         }
     }
 
