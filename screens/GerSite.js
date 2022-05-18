@@ -1396,11 +1396,11 @@ export default class GerSite extends React.Component {
 
                         <RNDropDownPicker
                             items={[
-                                { label: 'GER 1', value: 'GER 1', icon: () => <Icon name="flag" size={18} color="#900" /> },
-                                { label: 'GER 2', value: 'GER 2', icon: () => <Icon name="flag" size={18} color="#900" /> },
-                                { label: 'GER 3', value: 'GER 3', icon: () => <Icon name="flag" size={18} color="#900" /> },
-                                { label: 'GER 4', value: 'GER 4', icon: () => <Icon name="flag" size={18} color="#900" /> },
-                                { label: 'GER 5', value: 'GER 5', icon: () => <Icon name="flag" size={18} color="#900" /> },
+                                { label: 'GER 1', value: 'GER 1'},
+                                { label: 'GER 2', value: 'GER 2'},
+                                { label: 'GER 3', value: 'GER 3'},
+                                { label: 'GER 4', value: 'GER 4'},
+                                { label: 'GER 5', value: 'GER 5'},
                             ]}
                             placeholder="SELECT"
                             containerStyle={{ height: 60 }}
