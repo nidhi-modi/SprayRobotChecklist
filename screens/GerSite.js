@@ -8,6 +8,7 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import RNDropDownPicker from '@nectr-rn/react-native-dropdown-picker';
 import Icon from 'react-native-vector-icons/Feather';
 import moment from 'moment';
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 
 
 var houseSelected, houseNumberSelected, rowNumberSelected;
@@ -1315,11 +1316,14 @@ export default class GerSite extends React.Component {
 
                         this.setState({ isLoading: true });
 
-                        this.getGoogleData();
                         Toast.showWithGravity('Success!! \nForm Submitted Successfully.', Toast.LONG, Toast.CENTER);
                         //this.refs._scrollView.scrollTo({ x: 0, y: 0, animated: true });
 
-
+                        setTimeout(() => {
+                            this.getGoogleData()
+                        }, 5000);
+                       
+                        
 
                     } else {
 
@@ -1360,7 +1364,7 @@ export default class GerSite extends React.Component {
         if (this.state.isLoading) {
             return (
                 <View style={styles.activity}>
-                    <Text style={styles.fetchingText}>Loading.{"\n"}Please wait...</Text>
+                    <Text style={styles.fetchingText}>Loading{"\n"}Please wait...</Text>
                     <ActivityIndicator size="large" color="#0000ff" />
                 </View>
             )
@@ -1370,7 +1374,7 @@ export default class GerSite extends React.Component {
         return (
 
 
-            <ScrollView style={styles.formContainer}
+            <KeyboardAwareScrollView style={styles.formContainer}
                 keyboardShouldPersistTaps='handled'
                 ref='_scrollView'>
 
@@ -2153,7 +2157,7 @@ export default class GerSite extends React.Component {
 
 
 
-            </ScrollView >
+            </KeyboardAwareScrollView >
 
 
         )
@@ -2174,8 +2178,8 @@ const styles = StyleSheet.create({
 
         padding: 5,
         margin: 10,
-        height: '100%',
-        width: '100%'
+        height: Dimensions.get('window').height,
+        width: Dimensions.get('window').width
 
 
     },
@@ -2487,7 +2491,10 @@ const styles = StyleSheet.create({
         color: '#000000',
         fontWeight: 'bold',
         fontStyle: 'italic',
-        marginBottom: 10
+        marginBottom: 10,
+        alignItems: 'center',
+        justifyContent: 'center',
+        textAlign: "center"
 
     }
 })
