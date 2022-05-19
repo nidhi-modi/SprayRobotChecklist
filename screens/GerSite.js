@@ -458,7 +458,6 @@ export default class GerSite extends React.Component {
 
     setDataToUI = (data) => {
 
-        console.log("khdfhjhfjdhf  :"+data.length);
         if (data.length != 0) {
 
             var option1Data = data.check_list1;
@@ -469,6 +468,76 @@ export default class GerSite extends React.Component {
             var option6Data = data.check_list6;
             var option7Data = data.check_list7;
             var option8Data = data.check_list8;
+
+            //first reset everything before pasting data
+
+            this.resetRadioButton()
+
+            //RADIO OPTION 1
+            this.state.radioItems1.filter(item => item.label === option1Data).map((item) => {
+
+               item.selected = true;
+
+               this.setState({ radioOption1: option1Data })
+
+
+           });
+
+           //RADIO OPTION 2
+           this.state.radioItems2.filter(item => item.label === option2Data).map((item) => {
+
+               item.selected = false;
+
+
+           });
+
+           //RADIO OPTION 3
+           this.state.radioItems3.filter(item => item.label === option3Data).map((item) => {
+
+               item.selected = false;
+
+
+           });
+
+           //RADIO OPTION 4
+           this.state.radioItems4.filter(item => item.label === option4Data).map((item) => {
+
+               item.selected = false;
+
+
+           });
+
+           //RADIO OPTION 5
+           this.state.radioItems5.filter(item => item.label === option5Data).map((item) => {
+
+               item.selected = false;
+
+
+           });
+
+           //RADIO OPTION 6
+           this.state.radioItems6.filter(item => item.label === option6Data).map((item) => {
+
+               item.selected = false;
+
+
+           });
+
+           //RADIO OPTION 7
+           this.state.radioItems7.filter(item => item.label === option7Data).map((item) => {
+
+               item.selected = false;
+
+
+           });
+
+           //RADIO OPTION 8
+           this.state.radioItems8.filter(item => item.label === option8Data).map((item) => {
+
+               item.selected = false;
+
+            });
+            //ends here
 
 
             //RADIO OPTION 1
@@ -1265,8 +1334,6 @@ export default class GerSite extends React.Component {
         var rowNumber = this.state.rowNumber;
 
 
-
-
         if (sprayRobotNumber) {
             if (houseNumber) {
                 if (rowNumber) {
@@ -1536,7 +1603,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems1.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem1.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem1.bind(this, key)} onChangeItem={()=>this.changeItem1.bind(this, key)}/>
                             ))
                         }
 
@@ -1614,7 +1681,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems2.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem2.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem2.bind(this, key)} onChangeItem={()=>this.changeItem2.bind(this, key)}/>
                             ))
                         }
 
@@ -1693,7 +1760,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems3.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem3.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem3.bind(this, key)} onChangeItem={()=>this.changeItem3.bind(this, key)}/>
                             ))
                         }
 
@@ -1773,7 +1840,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems4.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem4.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem4.bind(this, key)} onChangeItem={()=>this.changeItem4.bind(this, key)}/>
                             ))
                         }
 
@@ -1851,7 +1918,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems5.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem5.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem5.bind(this, key)} onChangeItem={()=>this.changeItem5.bind(this, key)}/>
                             ))
                         }
 
@@ -1929,7 +1996,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems6.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem6.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem6.bind(this, key)} onChangeItem={()=>this.changeItem6.bind(this, key)}/>
                             ))
                         }
 
@@ -2007,7 +2074,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems7.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem7.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem7.bind(this, key)} onChangeItem={()=>this.changeItem7.bind(this, key)}/>
                             ))
                         }
 
@@ -2087,7 +2154,7 @@ export default class GerSite extends React.Component {
                         {
                             this.state.radioItems8.map((item, key) =>
                             (
-                                <RadioButton key={key} button={item} onClick={this.changeItem8.bind(this, key)} />
+                                <RadioButton key={key} button={item} onClick={this.changeItem8.bind(this, key)} onChangeItem={()=>this.changeItem8.bind(this, key)}/>
                             ))
                         }
 
