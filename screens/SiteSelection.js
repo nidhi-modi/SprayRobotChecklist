@@ -69,6 +69,7 @@ export default class SiteSelection extends React.Component {
       'Are you sure ?',
       'It cannot be changed',
       [
+        
         { text: 'Yes', onPress: () => this.props.navigation.navigate('ScreenNavigator', { site1: 'HAR' }) },
         { text: 'No', onPress: () => console.log('No button clicked'), style: 'cancel' },
       ],
