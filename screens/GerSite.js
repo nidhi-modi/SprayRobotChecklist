@@ -2242,7 +2242,6 @@ const styles = StyleSheet.create({
 
     formContainer: {
 
-
         padding: 5,
         margin: 10,
         height: Dimensions.get('window').height,
